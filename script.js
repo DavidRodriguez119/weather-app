@@ -28,11 +28,13 @@ document.getElementById(`search-button`).addEventListener(`click`, function () {
 
 // Set the values of the current day into the page
 const setCurrentValues = () => {
-    cityName.innerHTML = cityData.name;
+    const day = dayjs().format('DD/MM/YYYY');
+    cityName.innerHTML = `${cityData.name} (${day})`;
     tempCelcius = cityData.main.temp-273.15;
     currentTemp.innerHTML = `Temp: ${tempCelcius.toFixed(2)}°C`;
     currentWind.innerHTML = `Wind: ${cityData.wind.speed} MPH`;
     currentHumidity.innerHTML = `Humidity: ${cityData.main.humidity}%`
+    
 }
 
 
