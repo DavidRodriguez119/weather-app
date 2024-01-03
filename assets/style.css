@@ -1,0 +1,21 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+nav {
+    background-color: rgb(37, 37, 255);
+    height: 8vh;
+    position: relative;
+    text-align: center;
+    color: white;
+}
+h1 {
+    padding-top: 10px;
+}
+main {
+    background-color: rgb(162, 162, 255);
+    height: 92vh;
+}
+
+
