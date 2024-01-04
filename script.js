@@ -6,11 +6,25 @@ let city;
 let cityData;
 const forecast = [];
 const inputField = document.getElementById(`input-field`);
+const searchHistory = document.getElementById(`search-history`);
 const cityName = document.getElementById(`city-name`);
 const currentTemp = document.getElementById(`current-temp`);
 const currentWind = document.getElementById(`current-wind`);
 const currentHumidity = document.getElementById(`current-humidity`);
 const forecastContainer = document.getElementById(`forecast-container`);
+
+document.addEventListener("DOMContentLoaded", function() {
+    const citiesHistoryString = localStorage.getItem(`cities`)
+    const citiesHistory = JSON.parse(citiesHistoryString);
+    if(citiesHistory){
+        createHistory(citiesHistory);
+    }
+});
+
+const createHistory = (cities) => {
+    searchHistory.innerHTML = `<p>${cities}<p>`;
+    console.log(cities);
+};
 
 // when the search button is clicked do the following:
 document.getElementById(`search-button`).addEventListener(`click`, function () {
@@ -29,6 +43,21 @@ document.getElementById(`search-button`).addEventListener(`click`, function () {
         console.log(cityData);
         setCurrentValues();
         getForecastData();
+        const citiesHistoryString = localStorage.getItem(`cities`)
+        const citiesHistory = JSON.parse(citiesHistoryString);
+        if(!citiesHistory){
+            const cities = [cityData.name];
+            const citiesString = JSON.stringify(cities);
+            localStorage.setItem(`cities`, citiesString);
+            createHistory(cities);
+        } else {
+            citiesHistory.push(cityData.name);
+            const newCitiesString = JSON.stringify(citiesHistory);
+            localStorage.setItem(`cities`, newCitiesString)
+            createHistory(citiesHistory);
+        }        
+
+
         });        
 })
 
