@@ -64,7 +64,6 @@ const createHistory = (cities) => {
 
 // when the search button is clicked do the following:
 document.getElementById(`search-button`).addEventListener(`click`, function () {
-    console.log(`hi`);
     // reset page
     forecast.length = 0;
     forecastContainer.innerHTML = ``
