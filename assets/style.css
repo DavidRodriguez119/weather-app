@@ -50,11 +50,24 @@ button{
     margin: 5px 0px;
     background-color: rgb(106, 106, 255);
     color: white;
+    border-radius: 5px;
 }
 
 button:hover{
     color: black;
     background-color: rgb(186, 186, 255);
+}
+
+#search-history{
+    padding: 5px;
+}
+
+#search-history button {
+    background-color: grey;
+}
+
+#search-history button:hover{
+    background-color: rgb(205, 205, 205);
 }
 
 .content{

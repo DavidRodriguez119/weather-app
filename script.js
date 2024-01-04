@@ -6,19 +6,74 @@ let city;
 let cityData;
 const forecast = [];
 const inputField = document.getElementById(`input-field`);
+const searchHistory = document.getElementById(`search-history`);
 const cityName = document.getElementById(`city-name`);
 const currentTemp = document.getElementById(`current-temp`);
 const currentWind = document.getElementById(`current-wind`);
 const currentHumidity = document.getElementById(`current-humidity`);
 const forecastContainer = document.getElementById(`forecast-container`);
 
+document.addEventListener("DOMContentLoaded", function() {
+    const citiesHistoryString = localStorage.getItem(`cities`)
+    const citiesHistory = JSON.parse(citiesHistoryString);
+    if(citiesHistory){
+        createHistory(citiesHistory);
+    }
+});
+
+const createHistory = (cities) => {
+    for(let city of cities){
+        const historyButton = document.createElement(`button`);
+        historyButton.innerHTML = city;
+        searchHistory.appendChild(historyButton);
+
+        historyButton.addEventListener(`click`, function () {
+            // reset page
+            forecast.length = 0;
+            forecastContainer.innerHTML = ``
+            // get the input value
+            city = historyButton.innerHTML
+            // Fetch Request
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APIKey}`)
+                .then(function (response) {
+                return response.json();
+                })
+                .then(function (data) {
+                cityData = data;
+                console.log(cityData);
+                setCurrentValues();
+                getForecastData();
+                const citiesHistoryString = localStorage.getItem(`cities`)
+                const citiesHistory = JSON.parse(citiesHistoryString);
+                if(!citiesHistory){
+                    const cities = [cityData.name];
+                    const citiesString = JSON.stringify(cities);
+                    localStorage.setItem(`cities`, citiesString);
+                    createHistory(cities);
+                } else {
+                    citiesHistory.push(cityData.name);
+                    const newCitiesString = JSON.stringify(citiesHistory);
+                    localStorage.setItem(`cities`, newCitiesString)
+                    const newArray = [cityData.name]
+                    createHistory(newArray);
+                };
+                });        
+        })
+    };
+};
+
 // when the search button is clicked do the following:
 document.getElementById(`search-button`).addEventListener(`click`, function () {
+    console.log(`hi`);
     // reset page
     forecast.length = 0;
     forecastContainer.innerHTML = ``
     // get the input value
-    city = inputField.value
+    if(!inputField.value){
+        return;
+    } else {
+        city = inputField.value    
+    }     
     // Fetch Request
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APIKey}`)
         .then(function (response) {
@@ -29,8 +84,23 @@ document.getElementById(`search-button`).addEventListener(`click`, function () {
         console.log(cityData);
         setCurrentValues();
         getForecastData();
+        const citiesHistoryString = localStorage.getItem(`cities`)
+        const citiesHistory = JSON.parse(citiesHistoryString);
+        if(!citiesHistory){
+            const cities = [cityData.name];
+            const citiesString = JSON.stringify(cities);
+            localStorage.setItem(`cities`, citiesString);
+            createHistory(cities);
+        } else {
+            citiesHistory.push(cityData.name);
+            const newCitiesString = JSON.stringify(citiesHistory);
+            localStorage.setItem(`cities`, newCitiesString)
+            const newArray = [cityData.name]
+            createHistory(newArray);
+        };
         });        
 })
+
 
 // Set the values of the current day into the page
 const setCurrentValues = () => {
@@ -100,9 +170,8 @@ const setForecastValues = () => {
         forecastDiv.appendChild(tempParagraph);
         forecastDiv.appendChild(windParagraph);
         forecastDiv.appendChild(humidityParagraph);
-
-     }
-}
+    };
+};
 
 
 
